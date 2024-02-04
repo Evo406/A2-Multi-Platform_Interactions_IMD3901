@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+             AFRAME.registerComponent('socket-color', {
+            init : function() {
+                let socket = io();
+
+            socket.on('connect', (userData) => {
+                console.log('I exist in the network, yay!');
+
+                document.querySelector('#red_button').addEventListener('click', function(e) {
+                    socket.emit('red');
+             });
+
+                document.querySelector('#blue_button').addEventListener('click', function(e) {
+                    socket.emit('blue');
+                });
+
+                //listen for custom color_change event
+                socket.on('color_change', (data) => {
+                    //make a css color, then apply to the baackground of body
+                    let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
+                    console.log('colour_change: ' + colorStr);
+                    //document.body.style.backgroundColor = colorStr;
+                    document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
+                    });
+                });
+            }
+        });
+        </script>
+
+    </head>
+    <body>
+        <a-scene id="scene-background" background="color:rgb(0,0,0);" socket-color>
+            <a-entity id="camera_main" position="0 1.6 0" camera wasd-controls look-controls>
+                <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+            </a-entity>
+
+            <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
+        
+            <a-entity id="button_obj_red" position="-1 0 -2">
+                <a-entity id="red_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255,100,100);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(255,0,0); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(255,100,100); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+
+            <a-entity id="button_obj_blue" position="1 0 -2">
+                <a-entity id="blue_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(100,100,255);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(0,0,255); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(100,100,255); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+</html>
