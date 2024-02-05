@@ -3,7 +3,7 @@
         <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-             AFRAME.registerComponent('socket-color', {
+             AFRAME.registerComponent('button', {
             init : function() {
                 let socket = io();
 
@@ -12,11 +12,32 @@
 
                 document.querySelector('#red_button').addEventListener('click', function(e) {
                     socket.emit('red');
-             });
+                });
 
                 document.querySelector('#blue_button').addEventListener('click', function(e) {
                     socket.emit('blue');
                 });
+
+                document.querySelector('#add_button').addEventListener('click', function(e) {
+                    let scene = document.querySelector('a-scene');
+                    let cube = document.createElement('a-entity');
+                    let r = Math.floor(Math.random()*256); // randomize color
+                    let g = Math.floor(Math.random()*256); // randomize color
+                    let b = Math.floor(Math.random()*256); // randomize color
+                    let negRandom = Math.random();
+                    
+                    // We also want to randomize the negative x values
+                    if(negRandom > 0.5) {posX = (Math.random()*5)}
+                    else {posX = (Math.random()*-5)}
+                    let posY = (Math.random()*5); // random y value
+
+
+
+                    cube.setAttribute('geometry', 'primitive:sphere; radius:0.15;');
+                    cube.setAttribute('position',{x:posX,y:posY,z:-5});
+                    cube.setAttribute('color','rgb(' + r + ',' + g + ',' + b + ')');
+                    scene.appendChild(cube);
+                });w
 
                 //listen for custom color_change event
                 socket.on('color_change', (data) => {
@@ -25,22 +46,24 @@
                     console.log('colour_change: ' + colorStr);
                     //document.body.style.backgroundColor = colorStr;
                     document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
-                    });
                 });
+                });
+
+                
             }
         });
         </script>
 
     </head>
     <body>
-        <a-scene id="scene-background" background="color:rgb(0,0,0);" socket-color>
+        <a-scene id="scene-background" background="color:rgb(0,0,0);" button>
             <a-entity id="camera_main" position="0 1.6 0" camera wasd-controls look-controls>
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
             </a-entity>
 
             <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
         
-            <a-entity id="button_obj_red" position="-1 0 -2">
+            <a-entity id="button_obj_red" position="0 0 -2">
                 <a-entity id="red_button" class="interactive button" position="0 0.6 0" 
                           geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255,100,100);"
                           animation__mouseenter="property:material.color; type:color; to:rgb(255,0,0); startEvents:mouseenter; dur:200;"
@@ -56,6 +79,15 @@
                           animation__mouseleave="property:material.color; type:color; to:rgb(100,100,255); startEvents:mouseleave; dur:200;"
                           animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+
+            <a-entity id="button_obj_add" position="-1 0 -2">
+                <a-entity id="add_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(100,255,100);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(0,255,0); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(100,255,100); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:grey;"></a-entity>
             </a-entity>
         </a-scene>
     </body>
