@@ -10,8 +10,14 @@
             socket.on('connect', (userData) => {
                 console.log('I exist in the network, yay!');
 
-                document.querySelector('#red_button').addEventListener('click', function(e) {
-                    socket.emit('red');
+                document.querySelector('#del_button').addEventListener('click', function(e) {
+                    console.log('delete me');
+                    let planets = document.querySelectorAll('#planet');
+                    for(i=0; i<planets.length; i++){
+                        //planets.parentNode.removeChild(planets[i]);
+                        console.log('removed planet:' + planets[i] + i);
+                        planets[i].remove();
+                    }
                 });
 
                 document.querySelector('#blue_button').addEventListener('click', function(e) {
@@ -31,13 +37,12 @@
                     else {posX = (Math.random()*-5)}
                     let posY = (Math.random()*5); // random y value
 
-
-
                     cube.setAttribute('geometry', 'primitive:sphere; radius:0.15;');
                     cube.setAttribute('position',{x:posX,y:posY,z:-5});
+                    cube.setAttribute('id', 'planet');
                     cube.setAttribute('color','rgb(' + r + ',' + g + ',' + b + ')');
                     scene.appendChild(cube);
-                });w
+                });
 
                 //listen for custom color_change event
                 socket.on('color_change', (data) => {
@@ -63,8 +68,8 @@
 
             <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
         
-            <a-entity id="button_obj_red" position="0 0 -2">
-                <a-entity id="red_button" class="interactive button" position="0 0.6 0" 
+            <a-entity id="button_obj_del" position="0 0 -2">
+                <a-entity id="del_button" class="interactive button" position="0 0.6 0" 
                           geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255,100,100);"
                           animation__mouseenter="property:material.color; type:color; to:rgb(255,0,0); startEvents:mouseenter; dur:200;"
                           animation__mouseleave="property:material.color; type:color; to:rgb(255,100,100); startEvents:mouseleave; dur:200;"

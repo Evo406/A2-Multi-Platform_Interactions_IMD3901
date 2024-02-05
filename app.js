@@ -14,12 +14,8 @@ app.get('/', function(req,res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/2d', function(req,res) {
-    res.sendFile(__dirname + '/public/2d.html');
-});
-
-app.get('/3d', function(req,res) {
-    res.sendFile(__dirname + '/public/3d.html');
+app.get('/space', function(req,res) {
+    res.sendFile(__dirname + '/public/space.html');
 });
 
 //websocket stuff
@@ -33,12 +29,12 @@ io.on('connection', (socket) => {
     // custom events
     socket.on('red', (data) => {
         console.log("poop recieved! Wow!");
-        io.emit('color_change', {r:255, g:0, b:0}); // send an event to al clients (see cheet sheet online)
+        io.emit('color_change', {r:255, g:50, b:50}); // send an event to al clients (see cheet sheet online)
     });
 
     socket.on('blue', (data) => {
         console.log("Blue event recieved! Wow!");
-        io.emit('color_change', {r:0, g:0, b:255}); // send an event to al clients (see cheet sheet online)
+        io.emit('color_change', {r:50, g:50, b:255}); // send an event to al clients (see cheet sheet online)
     });
 });
 
