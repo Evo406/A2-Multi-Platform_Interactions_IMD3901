@@ -4,10 +4,6 @@ const http      = require('http');
 const server    = http.createServer(app);
 
 const LISTEN_PORT = 8080;
-
-// middleware to serve static files
-app.use(express.static(__dirname + '/public;'));
-
 //create our routes
 app.get('/', function(req,res) {
     res.sendFile(__dirname + '/public/index.html');
@@ -20,4 +16,5 @@ app.get('/space', function(req,res) {
 
 //start our server
 server.listen(LISTEN_PORT);
+app.use(express.static(__dirname + '/public')); // middleware to serve static files
 console.log("Server started on port " + LISTEN_PORT);
