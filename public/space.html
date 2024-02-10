@@ -2,12 +2,12 @@
     <head>
         <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
+        <script src="js/aframe.min.js"></script>
+        <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
         <script>
-             AFRAME.registerComponent('button', {
+             AFRAME.registerComponent('interact', {
             init : function() {
-                let socket = io();
 
-            socket.on('connect', (userData) => {
                 console.log('I exist in the network, yay!');
 
                 document.querySelector('#del_button').addEventListener('click', function(e) {
@@ -20,38 +20,30 @@
                     }
                 });
 
-                // document.querySelector('#blue_button').addEventListener('click', function(e) {
-                //     socket.emit('blue');
-                // });
-
                 document.querySelector('#add_button').addEventListener('click', function(e) {
                     let scene = document.querySelector('a-scene');
                     let cube = document.createElement('a-entity');
                     let r = Math.floor(Math.random()*256); // randomize color
                     let g = Math.floor(Math.random()*256); // randomize color
                     let b = Math.floor(Math.random()*256); // randomize color
-                    let negRandom = Math.random();
                     
-                    // We also want to randomize the negative x values
-                    if(negRandom > 0.5) {posX = (Math.random()*5)}
+                    // We want to randomize the X and Y positions of where each circle spawns.
+                    // To do that we want to set a random value to both the X and Y coordinates.
+                    // However because the player starts at origin (0,0), we also need to get some negative X-values
+                    // so the circles spawn on either side of the screen.
+                    let negRandom = Math.random();
+                    if(negRandom > 0.5) {posX = (Math.random()*5)} // This if statement determines if it will generate a pos- or neg- X coordinate value
                     else {posX = (Math.random()*-5)}
                     let posY = (Math.random()*5); // random y value
 
                     cube.setAttribute('geometry', 'primitive:sphere; radius:0.15;');
                     cube.setAttribute('position',{x:posX,y:posY,z:-5});
                     cube.setAttribute('id', 'planet');
+                    cube.setAttribute('class', 'clickable');
                     cube.setAttribute('color','rgb(' + r + ',' + g + ',' + b + ')');
-                    scene.appendChild(cube);
-                });
+                    cube.setAttribute('animation__click',"property:radius; from:0.15; to:0.0; startEvents:click; dur:050;" );
 
-                //listen for custom color_change event
-                socket.on('color_change', (data) => {
-                    //make a css color, then apply to the baackground of body
-                    let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
-                    console.log('colour_change: ' + colorStr);
-                    //document.body.style.backgroundColor = colorStr;
-                    document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
-                });
+                    scene.appendChild(cube);
                 });
 
                 
@@ -61,19 +53,15 @@
 
     </head>
     <body>
-        <a-scene id="scene-background" background="color:rgb(0,0,0);" button>
+        <a-scene id="scene-background" interact>
             <a-assets>
-                <!-- <a-asset-item id="planet_model" src="assets/models/SpacePlanet/scene.gltf" response-type="arraybuffer"></a-asset-item> -->
             </a-assets>
 
             <a-entity id="camera_main" position="0 1.6 0" camera look-controls>
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
             </a-entity>
-
             <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
-            
-            <!-- <a-entity id="space-planet_model" position="0 0 -50" rotation="0 0 0" scale="0.1 0.1 0.1" gltf-model="#planet_model"></a-entity> -->
-
+        
             <a-entity id="button_obj_del" position="0 0 -2">
                 <a-entity id="del_button" class="interactive button" position="0 0.6 0" 
                           geometry="primitive:sphere; radius:0.15; height:0.2;" material="color:rgb(255,100,100);"
@@ -100,6 +88,9 @@
                           animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:grey;"></a-entity>
             </a-entity>
+
+            <!--External A-Frame environment. Can be found here: https://github.com/supermedium/aframe-environment-component -->
+            <a-entity environment="preset:starry" lighting="distant"></a-entity>
         </a-scene>
     </body>
 </html>
