@@ -25,8 +25,8 @@ AFRAME.registerComponent('add-sphere', {
             //entity.setAttribute('animation__mouseenter', 'property:material.color; type:color; to:rgb(230,230,230); startEvents:mouseenter; dur:200;')
             //entity.setAttribute('animation__mouseleave', 'property:material.color; type:color; to:rgb(' + r + ',' + g + ',' + b + '); startEvents:mouseleave; dur:200;')
             entity.setAttribute('animation__click', 'startEvents:destroy;')
-            entity.setAttribute('planet-destroy'); // create new js file 
-            
+            entity.setAttribute('planet-destroy'); 
+
             CONTEXT_AF.scene.appendChild(entity);
             console.log("Sphere created!");
 
