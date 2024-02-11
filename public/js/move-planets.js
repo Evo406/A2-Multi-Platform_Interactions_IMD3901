@@ -8,12 +8,13 @@ AFRAME.registerComponent('move-planets', {
 
         // Variables to control animation
         let animationActive = false;
+        let movingUp = true;
         let animationInterval;
 
         // Function to start the animation
         function startAnimation() {
             animationActive = true;
-            animationInterval = setInterval(movePlanets, 100); // Adjust speed here
+            animationInterval = setInterval(movePlanets, 25); // Adjust speed here
         }
 
         // Function to stop the animation
@@ -26,39 +27,52 @@ AFRAME.registerComponent('move-planets', {
         function movePlanets() {
             // Get all the planet entities
             let planets = document.querySelectorAll('.planet');
-            planets.forEach(function(planet) {
+            //planets.forEach(function(planet) {
+            for (let i=0; i<planets.length; i++){
                 // Get current position
-                let currentPosition = planet.object3D.position;
+                let currentPosition = planets[i].object3D.position;
+                let newY = currentPosition.y;
 
-                // Calculate new Y position within the range of -2 to 2
-                let newY = currentPosition.y + Math.random() * 0.2 - 0.1; // Adjust the range here
+                // Calculate new Y position
+                if(movingUp == true) {
+                     newY = currentPosition.y + 0.1; // Adjust the range here
+                }
+                else {
+                    newY = currentPosition.y - 0.1;
+                }
 
                 // Ensure newY stays within the desired range
-                if (newY < -2) {
-                    newY = -2;
-                } else if (newY > 2) {
-                    newY = 2;
+                if (newY < 0) {
+                    newY = 0;
+                    movingUp = true;
+                } 
+                else if (newY > 5) {
+                    newY = 5;
+                    movingUp = false;
                 }
 
                 // Move the planet
-                planet.setAttribute('position', {
-                    x: currentPosition.x + 0.1, // Adjust the speed by changing this value
+                planets[i].setAttribute('position', {
+                    x: currentPosition.x, // Adjust the speed by changing this value
                     y: newY,
                     z: currentPosition.z
                 });
-            });
+            };
         }
 
         CONTEXT_AF.button.addEventListener('click', function() {
             if(CONTEXT_AF.isMoving === false){
                 // start spinning
-                console.log('start spinning');
+                console.log('start moving');
                 startAnimation();
+                CONTEXT_AF.isMoving = true;
             }
             else {
                 // stop spining
-                console.log('stop spinning');
+                console.log('stop moving');
                 stopAnimation();
+                CONTEXT_AF.isMoving = false;
+
             }
         });
     }

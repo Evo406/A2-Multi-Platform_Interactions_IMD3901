@@ -18,7 +18,7 @@ AFRAME.registerComponent('add-sphere', {
 
             // Create a new entity for each sphere
             let entity = document.createElement('a-entity');
-            entity.setAttribute('geometry', 'primitive: sphere; radius: 0.15;');
+            entity.setAttribute('geometry', 'primitive: sphere; radius: '+ (Math.random() * 0.4 + 0.1) +';');
             entity.setAttribute('position',{x: posX, y: posY, z: -5});
             entity.setAttribute('class', 'interactive planet');
             entity.setAttribute('color','rgb(' + r + ',' + g + ',' + b + ')');
@@ -27,6 +27,8 @@ AFRAME.registerComponent('add-sphere', {
 
             CONTEXT_AF.scene.appendChild(entity);
             console.log("Sphere created!");
+
+           // animation__mouseleave="property:material.color; type:color; to:rgb(100,255,100); startEvents:mouseleave; dur:200;"
 
         });
 
