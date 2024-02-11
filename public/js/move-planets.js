@@ -14,7 +14,7 @@ AFRAME.registerComponent('move-planets', {
         // Function to start the animation
         function startAnimation() {
             animationActive = true;
-            animationInterval = setInterval(movePlanets, 25); // Adjust speed here
+            animationInterval = setInterval(movePlanetsY, 25); // tick rate
         }
 
         // Function to stop the animation
@@ -24,7 +24,7 @@ AFRAME.registerComponent('move-planets', {
         }
 
         // Function to move the planets
-        function movePlanets() {
+        function movePlanetsY() {
             // Get all the planet entities
             let planets = document.querySelectorAll('.planet');
             //planets.forEach(function(planet) {
