@@ -33,12 +33,12 @@ AFRAME.registerComponent('move-planets', {
                 let currentPosition = planets[i].object3D.position;
                 let newY = currentPosition.y;
 
-                // Calculate new Y position
+                // Calculate new Y position based on the direction
                 if(movingUp == true) {
-                     newY = currentPosition.y + 0.1; // Adjust the range here
+                     newY = currentPosition.y + 0.05;
                 }
                 else {
-                    newY = currentPosition.y - 0.1;
+                    newY = currentPosition.y - 0.05;
                 }
 
                 // Ensure newY stays within the desired range
